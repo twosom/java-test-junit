@@ -27,6 +27,7 @@ class StudyServiceTest {
 
     @Test
     void createNewStudy() throws Exception {
+        //GIVEN
         StudyService studyService = new StudyService(memberService, studyRepository);
         assertNotNull(studyService);
 
@@ -36,12 +37,18 @@ class StudyServiceTest {
         when(memberService.findById(1L)).thenReturn(Optional.of(member));
         when(studyRepository.save(study)).thenReturn(study);
 
+        //WHEN
         studyService.createNewStudy(1L, study);
-        assertEquals(member, study.getOwner());
 
+        //THEN
+        assertEquals(member, study.getOwner());
         verify(memberService, times(1)).notify(study);
         verifyNoMoreInteractions(memberService);
-
+//        verify(memberService, times(1)).notify(member);
+//
+//        InOrder inOrder = inOrder(memberService);
+//        inOrder.verify(memberService).notify(study);
+//        inOrder.verify(memberService).notify(member);
     }
 
     private Member createNewMember(long id, String email) {
